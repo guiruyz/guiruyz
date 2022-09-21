@@ -1,3 +1,4 @@
+//Firmaware development by @guiruyz
 int pwm_out1 = 3;
 int transd_pin = A1;
 
