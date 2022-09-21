@@ -3,6 +3,7 @@
 // pin definition:
 int pwm_out1 = 3;
 int transd_pin = A1;
+int light_stats = 13;
 const int pb1 = 4;
 const int pb2 = 5;
 const int pb3 = 7;
@@ -13,6 +14,7 @@ int value;
 float intensity_pwm;
 char *msg = (char *)calloc(16,1);
 
+void lights (void);
 void manual_pwm(void);
   
 void manual_pwm(){
@@ -33,6 +35,7 @@ void manual_pwm(){
   analogWrite(pwm_out1, var_pwm);
   snprintf(msg, 16 , "\nValue: %d \n", var_pwm);
   Serial.print(msg);
+  lights ();
   delay(500);
   }
 }
@@ -56,7 +59,16 @@ void auto_pwm() {
     loop_v = 0;
   }
     analogWrite(pwm_out1, var_pwm);
+    lights ();
     delay(100);  
+  }
+}
+void lights (){
+  if (var_pwm == 0){
+  digitalWrite(light_stats, LOW);
+  }
+  if (var_pwm >= 1){
+  digitalWrite(light_stats, HIGH);
   }
 }
 void loop (){
@@ -83,19 +95,22 @@ void loop (){
      delay(1000);
  
   }  
+  lights ();
   delay(100);
 }
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  pinMode (light_stats, OUTPUT);
   pinMode (pb1, INPUT_PULLUP);
   pinMode (pb2, INPUT_PULLUP);
   pinMode (pb3, INPUT_PULLUP);
-  pinMode(transd_pin, INPUT); 
+  pinMode (transd_pin, INPUT); 
   
   loop_v = 0;
   var_pwm = 0;
+  digitalWrite(light_stats, LOW);
   
-  Serial.print("Please insert mode: \n Button 1: Manual \n Button 2: Auto \n Button 3: Turn on/Turn off");
+    Serial.print("Please insert mode: \n Button 1: Manual \n Button 2: Auto \n Button 3: Turn on/Turn off");
 }
