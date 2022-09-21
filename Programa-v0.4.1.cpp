@@ -69,7 +69,21 @@ void loop (){
     auto_pwm();
 	Serial.print("\nPlease insert mode: \n Button 1: Manual \n Button 2: Auto");  
   }
-    delay(100);
+    if (digitalRead(pb3) == LOW) {
+      if (var_pwm == 0){
+      	var_pwm = 255;
+        analogWrite(pwm_out1, var_pwm);
+        Serial.print("\n Lights turn on\n");
+      }
+      else{
+      	var_pwm = 0;
+        analogWrite(pwm_out1, var_pwm);  
+        Serial.print("\n Lights turn off\n");
+      }
+     delay(1000);
+ 
+  }  
+  delay(100);
 }
 
 void setup() {
@@ -81,6 +95,7 @@ void setup() {
   pinMode(transd_pin, INPUT); 
   
   loop_v = 0;
+  var_pwm = 0;
   
-  Serial.print("Please insert mode: \n Button 1: Manual \n Button 2: Auto \n");
+  Serial.print("Please insert mode: \n Button 1: Manual \n Button 2: Auto \n Button 3: Turn on/Turn off");
 }
