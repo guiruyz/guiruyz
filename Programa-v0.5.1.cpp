@@ -23,63 +23,69 @@ void manual_pwm(){
   loop_v = 1;
   while (loop_v == 1){
   	if (((digitalRead(pb1)) == LOW) && (intensity_pwm < 1)) {
-  	intensity_pwm = intensity_pwm + 0.25;
+  	  intensity_pwm = intensity_pwm + 0.25;
   	}
-  if (((digitalRead(pb2)) == LOW) && (intensity_pwm > 0)) {
-  	intensity_pwm = intensity_pwm - 0.25; 
+    if (((digitalRead(pb2)) == LOW) && (intensity_pwm > 0)) {
+  	  intensity_pwm = intensity_pwm - 0.25; 
   	}
-  if ((digitalRead(pb3)) == LOW) {
+    if ((digitalRead(pb3)) == LOW) {
     	loop_v = 0;
   	}
-  var_pwm = intensity_pwm * 255;
-  analogWrite(pwm_out1, var_pwm);
-  snprintf(msg, 16 , "\nValue: %d \n", var_pwm);
-  Serial.print(msg);
-  lights ();
-  delay(500);
+    var_pwm = intensity_pwm * 255;
+    analogWrite(pwm_out1, var_pwm);
+    snprintf(msg, 16 , "\nValue: %d \n", var_pwm);
+    Serial.print(msg);
+    lights ();
+    delay(500);
   }
 }
 
 void auto_pwm() {
-  // put your main code here, to run repeatedly: 
   var_pwm = 255; 
   while (loop_v == 1){
-  pinMode (pwm_out1 , OUTPUT);
-  delay(1000);
-  value = analogRead(transd_pin);
-  snprintf(msg, 16 , "\nPWM:%d Anl:%d\n", var_pwm, value);
-  Serial.print(msg);
-  if ((analogRead(transd_pin)) >= 45 ) {
-    var_pwm = 15;
+    pinMode (pwm_out1 , OUTPUT);
+    delay(1000);
+    value = analogRead(transd_pin);
+    snprintf(msg, 16 , "\nPWM:%d Anl:%d\n", var_pwm, value);
+    Serial.print(msg);
+    if ((analogRead(transd_pin)) >= 45 ) {
+      var_pwm = 25;
   	}
-  if ((analogRead(transd_pin)) < 45) {
-    var_pwm = 255;
+    if ((analogRead(transd_pin)) < 45) {
+      var_pwm = 255;
   	}
-  if ((digitalRead(pb3)) == LOW) {
-    loop_v = 0;
-  }
-    analogWrite(pwm_out1, var_pwm);
+    if ((digitalRead(pb3)) == LOW) {
+      delay(1000);
+      snprintf(msg, 16 , "\nexiting...\n");
+      Serial.print(msg);
+      delay(1000);
+      loop_v = 0;
+    }
+    analogWrite(pwm_out1, var_pwm); 
     lights ();
     delay(100);  
   }
 }
 void lights (){
   if (var_pwm == 0){
-  digitalWrite(light_stats, LOW);
+    digitalWrite(light_stats, LOW);
   }
   if (var_pwm >= 1){
-  digitalWrite(light_stats, HIGH);
+    digitalWrite(light_stats, HIGH);
   }
 }
 void loop (){
   loop_v = 1;
   	if ((digitalRead(pb1)) == LOW){
-    manual_pwm();
-    Serial.print("\nPlease insert mode: \n Button 1: Manual \n Button 2: Auto");
+    Serial.print("\nRule: \n Button 1: Increase \n Button 2: Decrease ");
+	manual_pwm();
+  	Serial.print("Please insert mode: \n Button 1: Manual \n Button 2: Auto \n Button 3: Turn on/Turn off");
   }
   if (digitalRead(pb2) == LOW) {
     auto_pwm();
-	Serial.print("\nPlease insert mode: \n Button 1: Manual \n Button 2: Auto");  
+	Serial.print("\nTurn the potentiometer to simulate the overhead projector turning on/off\n");  
+    manual_pwm();
+    Serial.print("Please insert mode: \n Button 1: Manual \n Button 2: Auto \n Button 3: Turn on/Turn off");
   }
     if (digitalRead(pb3) == LOW) {
       if (var_pwm == 0){
@@ -100,7 +106,6 @@ void loop (){
 }
 
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(9600);
   pinMode (light_stats, OUTPUT);
   pinMode (pb1, INPUT_PULLUP);
@@ -111,6 +116,5 @@ void setup() {
   loop_v = 0;
   var_pwm = 0;
   digitalWrite(light_stats, LOW);
-  
-    Serial.print("Please insert mode: \n Button 1: Manual \n Button 2: Auto \n Button 3: Turn on/Turn off");
+  Serial.print("Please insert mode: \n Button 1: Manual \n Button 2: Auto \n Button 3: Turn on/Turn off");
 }
