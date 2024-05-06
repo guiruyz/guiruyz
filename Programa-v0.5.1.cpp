@@ -22,7 +22,7 @@ void manual_pwm(){
   intensity_pwm = 1;
   loop_v = 1;
   while (loop_v == 1){
-  	if (((digitalRead(pb1)) == LOW) && (intensity_pwm < 1)) {
+  if (((digitalRead(pb1)) == LOW) && (intensity_pwm < 1)) {
   	intensity_pwm = intensity_pwm + 0.25;
   	}
   if (((digitalRead(pb2)) == LOW) && (intensity_pwm > 0)) {
@@ -50,10 +50,10 @@ void auto_pwm() {
   Serial.print(msg);
   if ((analogRead(transd_pin)) >= 45 ) {
     var_pwm = 25;
-  	}
+  }
   if ((analogRead(transd_pin)) < 45) {
     var_pwm = 255;
-  	}
+  }
   if ((digitalRead(pb3)) == LOW) {
     delay(1000);
     snprintf(msg, 16 , "\nexiting...\n");
